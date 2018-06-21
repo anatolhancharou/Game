@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Monsterification</title>
+    <link rel="stylesheet" href="./assets/css/style.css">   
+</head>
+<body>
+    <div class="wrapper">
+        <div class="game-container hidden">
+            <canvas id="game-canvas" class="hidden" width="1244" height="700"></canvas>
+            <div id="modal-screen" class="modal-screen hidden"></div>
+            <div id="task-screen" class="task-screen hidden"></div>
+            <div class="table-records hidden"></div>
+        </div>
+        <div class="landing-page-container">
+            <header>
+                <div class="logo">
+                    <h1><a href="#">Monsterification</a></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#about">Игра</a></li>
+                        <li><a href="#gameplay">Геймплей</a></li>
+                        <li><a href="#author">Об авторе</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <main>
+                <section id="about" class="section-about">
+                    <h2>Добро пожаловать в игру "Монстерификация"!</h2>
+                     <p>Здесь вам предстоит сразиться с бесчисленным множеством монстров.<br>
+                        Вооружившись знаниями, одолейте как можно больше монстров.<br>
+                        И да пребудет с вами сила!</p>
+                    <div class="button-play">Играть</div>
+                    <div class="additional hidden">
+                        <i><span id="additional"></span></i>
+                        <span>или</span>
+                        <div class="button-new-player"><span>Новый игрок<div></div>
+                    </div>
+                </section>
+                <section id="gameplay" class="section-screenshots">
+                    <p>Скриншоты геймплея</p>
+                    <div class="screenshots">
+                        <div class="img"></div>
+                        <div class="img"></div>
+                        <div class="img"></div>
+                    </div>
+                </section>
+                <section id="author" class="section-author">
+                    <p>Автор: Гончаров Анатолий</p>
+                </section>
+            </main>
+            <footer>
+                <div>
+                    <a href="https://github.com/anatolhancharou">github.com/anatolhancharou</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    <script src="./assets/js/app.js"></script>
+</body>
+</html>
