@@ -817,7 +817,7 @@ window.onload = function() {
         const soundCorrect = new Audio('./assets/sound/correct.wav');
         soundCorrect.volume = 0.2;
         const soundIncorrect = new Audio('./assets/sound/incorrect.wav');
-        soundCorrect.volume = 0.2;
+        soundIncorrect.volume = 0.2;
 
         switch (value) {
             case 'correct':
