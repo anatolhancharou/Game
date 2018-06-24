@@ -45,11 +45,6 @@ header {
 
 h2 {
     text-align: center;
-    padding-bottom: 20px;
-}
-
-.section-about h2 {
-    padding: 20px 5px 0px 5px;
 }
 
 nav {
@@ -81,18 +76,30 @@ footer a:hover {
 
 .landing-page-container {
     width: 100%;
-    position: relative;
     color: #444e58;    
 }
 
 .section-about {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-top: 80px solid transparent;
 	margin-top: -80px;
     padding-left: 20%;
     padding-right: 20%;
     text-align: center;
-    height: 400px;
+    height: 100vh;
     border-bottom: 5px solid #afeeee;
+}
+
+.container-about {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 400px;
 }
 
 .button-play,
@@ -129,13 +136,13 @@ footer a:hover {
 .form-screen {
     position: absolute;
     left: 50%;
-    top: 100px;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 10px;
     box-shadow: 0 0 20px #afeeee;
     color: #afeeee;
     width: 400px;
-    height: 200px;
+    height: 260px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -182,8 +189,6 @@ label {
 .section-author {
     border-top: 80px solid transparent;
 	margin-top: -80px;
-    height: 100%;
-    width: 100%;
     padding: 20px 80px;
     color: #afeeee;
     text-align: center; 
@@ -201,9 +206,8 @@ label {
 
 div.screenshots {
     display: flex;
-    flex-wrap: wrap;
-    width: 1200px; 
-    justify-content: space-around;
+    flex-direction: column;
+    width: 800px;
 }
 
 .screenshots div:first-child {    
@@ -219,8 +223,8 @@ div.screenshots {
 }
 
 .img {
-    width: 533px;
-    height: 300px;
+    width: 750px;
+    height: 418px;
     border: 2px solid #afeeee;
     margin: 0 20px 20px 20px;
 }
@@ -232,7 +236,10 @@ div.screenshots {
 }
 
 .section-author {
-    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
     border-bottom: 5px solid #afeeee;
     color: #444e58;
 }
@@ -291,11 +298,11 @@ div.spell:hover {
     transform: translate(-50%, -50%);
     width: 560px;
     height: 280px;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 .spell:hover {
-    outline: 20px solid #d3d3d3;
+    outline: 20px solid #fff;
 }
 
 div.spell:first-child {
@@ -425,6 +432,7 @@ div.incorrect {
     margin: 0;
     padding: 0;
 }
+
 .sortable li {
     margin: 3px 3px 3px 0;
     padding: 1px;
@@ -436,6 +444,10 @@ div.incorrect {
     background-color: #fff;
     font-size: 60px;
     cursor: -webkit-grab;
+}
+
+.table-records h2 {
+    padding-bottom: 20px;
 }
 
 table {

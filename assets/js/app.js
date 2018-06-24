@@ -22,7 +22,7 @@ window.onload = function() {
 
     function generateMonsterName() {
         let adjectives = [
-            'Ужасный', 'Злобный', 'Сопливый', 'Смердящий', 'Жуткий',
+            'Ужасный', 'Злобный', 'Сопливый', 'Страшный', 'Жуткий',
             'Вредный', 'Зловещий', 'Безумный', 'Свирепый', 'Злой'
         ];
 
@@ -57,10 +57,9 @@ window.onload = function() {
     let monsterHealth;
     let startTime;
     const sprite = new Image();
-    sprite.onload = function() {
-        _.noop();
-    };
     sprite.src = './assets/img/sprite.png';
+    const music = document.querySelector('#bg-audio');
+    music.volume = 0.1;
 
     const helper = {
         clicked: false,
@@ -70,24 +69,30 @@ window.onload = function() {
     const canvas = document.querySelector('#game-canvas');
     const ctx = canvas.getContext('2d');
     const buttonPlay = document.querySelector('.button-play');
-    
-    if (localStorage.getItem('lastPlayer')) {
-        show(document.querySelector('.additional'));
-        let lastPlayer = JSON.parse(localStorage.getItem('lastPlayer')).nickName;
-        const span = document.querySelector('#additional');
-        span.textContent = `как ${lastPlayer}`;
 
-        buttonPlay.addEventListener('click', () => {
-            hide(document.querySelector('.landing-page-container'));
-            startGame(lastPlayer);
-        });
-
-        const buttonNewPlayer = document.querySelector('.button-new-player');
-        buttonNewPlayer.addEventListener('click', createForm);
-    } else {
-        buttonPlay.addEventListener('click', createForm);
-    }    
+    handleHomeScreenButtons();
     
+    function handleHomeScreenButtons() {
+
+        if (localStorage.getItem('lastPlayer')) {
+            let lastPlayer = JSON.parse(localStorage.getItem('lastPlayer')).nickName;
+            const span = document.querySelector('#additional');
+            span.textContent = `как ${lastPlayer}`;
+            show(document.querySelector('.additional'));
+
+            buttonPlay.addEventListener('click', () => {
+                hide(document.querySelector('.landing-page-container'));
+                startGame(lastPlayer);
+            });
+
+            const buttonNewPlayer = document.querySelector('.button-new-player');
+            buttonNewPlayer.addEventListener('click', createForm);
+        } else {
+            buttonPlay.addEventListener('click', createForm);
+        }
+
+    }
+
     function show(node) {
         node.classList.remove('hidden');
     }
@@ -97,7 +102,7 @@ window.onload = function() {
     }    
     
     function createForm() {
-        const landingPage = document.querySelector('.landing-page-container');
+        const container = document.querySelector('.container-about');
         const formScreen = document.createElement('div');
         formScreen.className = 'form-screen';
         const form = document.createElement('form');
@@ -114,7 +119,7 @@ window.onload = function() {
         buttonStartGame.textContent = 'Начать игру';
         form.appendChild(buttonStartGame);
         formScreen.appendChild(form);
-        landingPage.appendChild(formScreen);
+        container.appendChild(formScreen);
 
         form.addEventListener('submit', () => {
             event.preventDefault();
@@ -125,10 +130,13 @@ window.onload = function() {
             localStorage.setItem('lastPlayer', JSON.stringify({
                 nickName : form.elements[0].value
             }));
+
+            handleHomeScreenButtons();
         });
     }
 
     function startGame(name) {
+        music.play();        
         const gameContainer = document.querySelector('.game-container');
         show(gameContainer);
         show(canvas);
@@ -170,7 +178,7 @@ window.onload = function() {
             helper.chosenSpell = spell.id;
             clearScreen(modalScreen);
             hide(modalScreen);
-            getRandomTask();            
+            getRandomTask();
         });
     }
 
@@ -332,8 +340,7 @@ window.onload = function() {
         } else {
             words = JSON.parse(xhrWords.responseText);
         }
-    };
-    
+    };    
 
     function createArithmeticTask() {
         let sign = _.sample(['+', '-', '&times;', '&divide;']);
@@ -640,6 +647,7 @@ window.onload = function() {
         taskContainer.appendChild(task);
 
         if (data.type === 'listening' || data.type === 'listeningMultipleAnswer') {
+            music.pause();
             const buttonListen = document.createElement('div');
             buttonListen.className = 'button';
             const span = document.createElement('span');
@@ -736,6 +744,7 @@ window.onload = function() {
         }
         
         setTimeout(function() {
+            music.play();
             const taskScreen = document.querySelector('#task-screen');
             clearScreen(taskScreen);
             hide(taskScreen);
@@ -752,6 +761,8 @@ window.onload = function() {
                 setTimeout(() => {
                     createButtonRecords();
                     stopAnimation();
+                    music.pause();
+                    music.currentTime = 0;
                 }, 6000);
             }
 
@@ -1008,7 +1019,7 @@ window.onload = function() {
         ctx.lineTo(monster.pos[0] + 135, monster.pos[1] - 51);
         ctx.lineWidth = _.random(20);
         ctx.lineCap = 'round';
-        ctx.strokeStyle = 'coral';
+        ctx.strokeStyle = '#f08080';
         ctx.stroke();
     }
 
@@ -1045,7 +1056,7 @@ window.onload = function() {
         ctx.lineTo(240, 500);
         ctx.lineWidth = _.random(20);
         ctx.lineCap = 'round';
-        ctx.strokeStyle = 'lightgreen';
+        ctx.strokeStyle = '#90ee90';
         ctx.stroke();
         ctx.shadowBlur = 0;
     }
