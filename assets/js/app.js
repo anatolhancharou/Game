@@ -59,8 +59,17 @@ window.onload = function() {
     const sprite = new Image();
     sprite.src = './assets/img/sprite.png';
     const music = document.querySelector('#bg-audio');
-    music.volume = 0.1;
+    music.volume = 0.05;
 
+    const soundCorrect = new Audio('./assets/sound/correct.wav');
+    soundCorrect.volume = 0.2;
+    const soundIncorrect = new Audio('./assets/sound/incorrect.wav');
+    soundIncorrect.volume = 0.2;
+    const soundLaser = new Audio('./assets/sound/laser.wav');
+    soundLaser.volume = 0.1;
+    const soundElectricity = new Audio('./assets/sound/electricity.wav');
+    soundElectricity.volume = 0.1;
+    
     const helper = {
         clicked: false,
         correct: false
@@ -151,7 +160,7 @@ window.onload = function() {
         const buttonChooseSpell = document.createElement('div');
         buttonChooseSpell.className = 'button-choose-spell';
         const span = document.createElement('span');
-        span.textContent = 'Выберите заклинание';
+        span.textContent = 'Выбрать заклинание';
         buttonChooseSpell.appendChild(span);
         gameContainer.appendChild(buttonChooseSpell);
         buttonChooseSpell.addEventListener('click', displayModalScreen);        
@@ -417,7 +426,7 @@ window.onload = function() {
         let randomValues = _.sample(countries);
 
         const taskData = {
-            title: `Назовите столицу, страна &ndash; <span>${randomValues[0]}</span>`,
+            title: `Назовите столицу страны: <span>${randomValues[0]}</span>`,
             correctAnswer: randomValues[1]
         };
         
@@ -716,7 +725,7 @@ window.onload = function() {
     function handleInput(input, data) {
         startTime = null;
         if (isCorrect(input, data)) {
-            playSound('correct');
+            soundCorrect.play();
             showMessage('Верно! :)');
             monster.health -= 25;
             helper.correct = true;
@@ -738,7 +747,7 @@ window.onload = function() {
                 answer = `Правильный ответ: ${data.correctAnswer}`;
             }
 
-            playSound('incorrect');
+            soundIncorrect.play();
             showMessage(`Неверно! :( ${answer}`);
             player.health -= 20;
         }
@@ -824,36 +833,7 @@ window.onload = function() {
 
     }
 
-    function playSound(value) {
-        const soundCorrect = new Audio('./assets/sound/correct.wav');
-        soundCorrect.volume = 0.2;
-        const soundIncorrect = new Audio('./assets/sound/incorrect.wav');
-        soundIncorrect.volume = 0.2;
-
-        switch (value) {
-            case 'correct':
-                soundCorrect.play();
-                break;
-            case 'incorrect':
-                soundIncorrect.play();
-                break;        
-        }
-
-    }
-
     let dy = 0.1;
-
-    const soundLaser = new Audio('./assets/sound/laser.wav');
-    soundLaser.volume = 0.1;
-    soundLaser.onload = function() {
-        soundLaser.pause();
-    }
-
-    const soundElectricity = new Audio('./assets/sound/electricity.wav');
-    soundElectricity.volume = 0.1;
-    soundElectricity.onload = function() {
-        soundElectricity.pause();
-    }
 
     function drawUpperCanvas() {
         ctx.font = '16px Tahoma';
