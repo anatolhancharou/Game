@@ -397,8 +397,8 @@ input {
 .button-records {
     position: absolute;
     left: 50%;
-    top: 250px;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -300%);
     width: 300px;
     margin: 0;
 }
