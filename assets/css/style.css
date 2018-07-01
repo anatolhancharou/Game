@@ -102,6 +102,19 @@ footer a:hover {
     height: 400px;
 }
 
+.inner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 120px;
+}
+
+.inner-container > span {
+    font-size: 14px;
+}
+
 .button-play,
 .button-new-player,
 .button-ok {
@@ -130,7 +143,7 @@ footer a:hover {
 
 .button-new-player {
     font-size: 16px;
-    margin-bottom: 20px;    
+    /* margin-bottom: 20px;     */
 }
 
 .form-screen {
@@ -226,7 +239,7 @@ div.screenshots {
     width: 750px;
     height: 418px;
     border: 2px solid #afeeee;
-    margin: 0 20px 20px 20px;
+    margin: 20px;
 }
 
 .section-about p,

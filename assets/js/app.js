@@ -70,14 +70,10 @@ window.onload = function() {
     const soundElectricity = new Audio('./assets/sound/electricity.wav');
     soundElectricity.volume = 0.1;
     
-    const helper = {
-        clicked: false,
-        correct: false
-    }
+    const helper = {};
 
-    const canvas = document.querySelector('#game-canvas');
-    const ctx = canvas.getContext('2d');
-    const buttonPlay = document.querySelector('.button-play');
+    let canvas;
+    let ctx;
 
     handleHomeScreenButtons();
     
@@ -85,19 +81,56 @@ window.onload = function() {
 
         if (localStorage.getItem('lastPlayer')) {
             let lastPlayer = JSON.parse(localStorage.getItem('lastPlayer')).nickName;
-            const span = document.querySelector('#additional');
-            span.textContent = `как ${lastPlayer}`;
-            show(document.querySelector('.additional'));
+            
+            const innerContainer = document.querySelector('.inner-container');
+            const buttonPlay = document.createElement('div');
+            buttonPlay.className = 'button-play';
+            const buttonPlayText = document.createElement('span');
+            buttonPlayText.textContent = 'Играть';
+            buttonPlay.appendChild(buttonPlayText);
+            innerContainer.appendChild(buttonPlay);
+            
+            let span = document.createElement('span');
+            span.innerHTML = `как <b>${lastPlayer}</b>`;
+            innerContainer.appendChild(span);
+            span = document.createElement('span');
+            span.textContent = 'или';
+            innerContainer.appendChild(span);
 
-            buttonPlay.addEventListener('click', () => {
+            const buttonNewPlayer = document.createElement('div');
+            buttonNewPlayer.className = 'button-new-player';
+            const buttonNewPlayerText = document.createElement('span');
+            buttonNewPlayerText.textContent = 'Новый игрок';
+            buttonNewPlayer.appendChild(buttonNewPlayerText);
+            innerContainer.appendChild(buttonNewPlayer);
+            
+            buttonPlay.addEventListener('click', function handleButtonPlay() {
                 hide(document.querySelector('.landing-page-container'));
                 startGame(lastPlayer);
+                buttonPlay.removeEventListener('click', handleButtonPlay);
+                clearScreen(innerContainer);
             });
 
-            const buttonNewPlayer = document.querySelector('.button-new-player');
-            buttonNewPlayer.addEventListener('click', createForm);
+            buttonNewPlayer.addEventListener('click', function handleButtonNewPlayer() {
+                createForm();
+                buttonNewPlayer.removeEventListener('click', handleButtonNewPlayer);
+                clearScreen(innerContainer);
+            });
+
         } else {
-            buttonPlay.addEventListener('click', createForm);
+            const innerContainer = document.querySelector('.inner-container');
+            const buttonPlay = document.createElement('div');
+            buttonPlay.className = 'button-play';
+            const buttonPlayText = document.createElement('span');
+            buttonPlayText.textContent = 'Играть';
+            buttonPlay.appendChild(buttonPlayText);
+            innerContainer.appendChild(buttonPlay);
+            
+            buttonPlay.addEventListener('click', function handleButtonPlay() {
+                createForm();
+                buttonPlay.removeEventListener('click', handleButtonPlay);
+                clearScreen(innerContainer);
+            });
         }
 
     }
@@ -119,7 +152,6 @@ window.onload = function() {
         label.innerHTML = 'Придумайте имя вашему персонажу<br>';
         const input = document.createElement('input');
         input.type = 'text';
-        input.autofocus = true;
         input.required = true;
         label.appendChild(input);
         form.appendChild(label);
@@ -129,30 +161,37 @@ window.onload = function() {
         form.appendChild(buttonStartGame);
         formScreen.appendChild(form);
         container.appendChild(formScreen);
+        input.focus();
 
         form.addEventListener('submit', () => {
             event.preventDefault();
             startGame(form.elements[0].value);
-            hide(formScreen);
+            formScreen.remove();
             hide(document.querySelector('.landing-page-container'));
 
             localStorage.setItem('lastPlayer', JSON.stringify({
                 nickName : form.elements[0].value
             }));
-
-            handleHomeScreenButtons();
         });
     }
 
     function startGame(name) {
-        music.play();        
+        music.play();
         const gameContainer = document.querySelector('.game-container');
         show(gameContainer);
-        show(canvas);
+        createCanvas();
         createPlayer(name);
         createMonster();
         renderCanvas();
         createButtonChooseSpell();
+    }
+
+    function createCanvas() {
+        canvas = document.createElement('canvas');
+        canvas.width = 1244;
+        canvas.height = 700;
+        document.querySelector('.game-container').appendChild(canvas);
+        ctx = canvas.getContext('2d');
     }
 
     function createButtonChooseSpell() {
@@ -201,7 +240,7 @@ window.onload = function() {
         monsterHealth = monster.health;
     }
 
-    if (localStorage.getItem('table') === null) {
+    if (!localStorage.getItem('table')) {
         const table = [];
         localStorage.setItem('table', JSON.stringify(table));
     }
@@ -226,8 +265,6 @@ window.onload = function() {
     }
 
     function displayTableRecords() {
-        document.querySelector('.button-records').remove();
-        hide(canvas);
         const tableRecords = document.querySelector('.table-records');
         const heading = document.createElement('h2');
         heading.textContent = 'Таблица рекордов';
@@ -244,6 +281,7 @@ window.onload = function() {
         headercell.textContent = 'Количество побежденных монстров';
         row.appendChild(headercell);
         table.appendChild(row);
+        
         let records = JSON.parse(localStorage.getItem('table'));
         
         for (let i = 0; i < 10; i++) {
@@ -276,6 +314,7 @@ window.onload = function() {
         clearScreen(tableRecords);
         hide(tableRecords);
         hide(document.querySelector('.game-container'));
+        handleHomeScreenButtons();
         show(document.querySelector('.landing-page-container'));
     }
 
@@ -673,8 +712,7 @@ window.onload = function() {
         let answer;
 
         if (data.type !== 'draggable') {
-            answer = document.createElement('input');
-            answer.autofocus = true;
+            answer = document.createElement('input');            
         } else {
             answer = document.createElement('ul');
             answer.className = 'sortable';
@@ -697,6 +735,7 @@ window.onload = function() {
         buttonDone.appendChild(span);
         taskContainer.appendChild(buttonDone);
         taskScreen.appendChild(taskContainer);
+        answer.focus();
 
         $(function() {
             $('#sortable').sortable();
@@ -704,7 +743,7 @@ window.onload = function() {
         });
 
         buttonDone.addEventListener('click', function() {
-
+            
             if (data.type === 'draggable') {
                 const tiles = document.querySelectorAll('.tiles');
             
@@ -717,18 +756,17 @@ window.onload = function() {
                 answer.disabled = true;
             }
 
-            helper.clicked = true;
             handleInput(playerAnswer, data);
         });
     }
-
+    
     function handleInput(input, data) {
         startTime = null;
         if (isCorrect(input, data)) {
             soundCorrect.play();
             showMessage('Верно! :)');
             monster.health -= 25;
-            helper.correct = true;
+            helper.answer = 'correct';
 
             if (monster.health === 0) {
                 setTimeout(() => {
@@ -738,7 +776,7 @@ window.onload = function() {
             }
 
         } else {
-            helper.correct = false;
+            helper.answer = 'incorrect';
             let answer;
 
             if (Array.isArray(data.correctAnswer)) {
@@ -758,11 +796,11 @@ window.onload = function() {
             clearScreen(taskScreen);
             hide(taskScreen);
 
-            if (player.health && helper.correct) {
+            if (player.health && helper.answer === 'correct') {
                 setTimeout(() => {
                     createButtonChooseSpell();
                 }, 9000);
-            } else if (player.health && !helper.correct) {
+            } else if (player.health && helper.answer === 'incorrect') {
                 setTimeout(() => {
                     createButtonChooseSpell();
                 }, 6000);
@@ -787,9 +825,12 @@ window.onload = function() {
         buttonRecords.appendChild(span);
         gameContainer.appendChild(buttonRecords);
 
-        buttonRecords.addEventListener('click', () => {
+        buttonRecords.addEventListener('click', function handleButtonRecords() {
+            canvas.remove();
             updateTableRecords();
             displayTableRecords();
+            buttonRecords.removeEventListener('click', handleButtonRecords);
+            buttonRecords.remove();
         });
     }
 
@@ -904,7 +945,7 @@ window.onload = function() {
 
         drawMonster(monster.pos[0], monster.pos[1]);
 
-        if (helper.clicked && helper.correct) {
+        if (helper.answer === 'correct') {
             if (progress > 4000 && progress < 6000) {
                 applySpell();
             } else if (progress >= 6000 && progress <= 9000) {
@@ -920,13 +961,11 @@ window.onload = function() {
                 ctx.shadowBlur = 40;
             } else if (progress >= 9000 && progress < 13000) {
                 soundLaser.pause();
-                soundLaser.currentTime = 0;
-                helper.clicked = false;
-                helper.correct = false;
+                soundLaser.currentTime = 0;                
             }
         }
 
-        if (helper.clicked && !helper.correct) {
+        if (helper.answer === 'incorrect') {
             if (progress > 4000 && progress < 6000) {
                 applyMonsterSpell();
                 ctx.shadowColor = '#ff7f50';
@@ -934,9 +973,7 @@ window.onload = function() {
             } else if (progress >= 6000 && progress <= 9000) {
                 reducePlayerHealth();
                 soundLaser.pause();
-                soundLaser.currentTime = 0;
-            } else if (progress > 9000 && progress < 11000) {
-                helper.clicked = false;
+                soundLaser.currentTime = 0;                            
             }
         }
         
@@ -1037,7 +1074,6 @@ window.onload = function() {
         ctx.lineWidth = _.random(20);
         ctx.lineCap = 'round';
         ctx.strokeStyle = '#90ee90';
-        ctx.stroke();
-        ctx.shadowBlur = 0;
+        ctx.stroke();        
     }
 }
